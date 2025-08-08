@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
-
-// Content (Decap CMS-managed)
 import site from "../content/site.json";
 import projects from "../content/projects.json";
 
@@ -11,20 +9,13 @@ const sectionOrder: SectionKey[] = (Array.isArray((site as any).sections)
   ? (site as any).sections.map((s: any) => typeof s === "string" ? s : s.section).filter(Boolean) 
   : ["hero","services","work","studio","instagram","footer"]) as SectionKey[];
 
-// Small wrapper to avoid preview env duplicate vars & unify external links
 function ExternalLink({ href, className = "", children }: { href: string; className?: string; children: React.ReactNode }) {
-  return (
-    <a href={href} target="_blank" rel="noreferrer" className={className}>
-      {children}
-    </a>
-  );
+  return <a href={href} target="_blank" rel="noreferrer" className={className}>{children}</a>;
 }
 
-// Reduced-motion aware reveal
 function Reveal({ as: Tag = "div", className = "", children, ...props }: any) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [show, setShow] = useState(false);
-
   useEffect(() => {
     if (typeof window === "undefined") { setShow(true); return; }
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -35,34 +26,26 @@ function Reveal({ as: Tag = "div", className = "", children, ...props }: any) {
     io.observe(node);
     return () => io.disconnect();
   }, []);
-
   const cls = `transition duration-500 ease-out will-change-transform ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} ${className}`;
   // @ts-ignore
   return <Tag ref={ref} className={cls} {...props}>{children}</Tag>;
 }
 
 export default function Page() {
-  // THEME: quad-state (system, dark, editorial, creative)
   const MODE_KEY = "mozaq_theme_mode";
   const [mode, setMode] = useState<"system"|"dark"|"editorial"|"creative">("system");
   const mql = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
   useEffect(() => {
-    try {
-      const saved = typeof window !== "undefined" ? localStorage.getItem(MODE_KEY) : null;
+    try { const saved = typeof window !== "undefined" ? localStorage.getItem(MODE_KEY) : null;
       if (saved === "dark" || saved === "editorial" || saved === "system" || saved === "creative") setMode(saved as any);
     } catch {}
   }, []);
 
-  useEffect(() => {
-    try { if (typeof window !== "undefined") localStorage.setItem(MODE_KEY, mode); } catch {}
-  }, [mode]);
+  useEffect(() => { try { if (typeof window !== "undefined") localStorage.setItem(MODE_KEY, mode); } catch {} }, [mode]);
 
   const theme = useMemo(() => {
-    if (mode === "system") {
-      const prefersDark = !!(mql && mql.matches);
-      return prefersDark ? "dark" : "editorial";
-    }
+    if (mode === "system") { const prefersDark = !!(mql && mql.matches); return prefersDark ? "dark" : "editorial"; }
     return mode;
   }, [mode, mql && mql.matches]);
 
@@ -80,39 +63,29 @@ export default function Page() {
   const pageClass = theme === "editorial" ? "min-h-screen bg-stone-50 text-stone-900"
                     : theme === "creative" ? "min-h-screen bg-[#F5F1EA] text-stone-900"
                     : "min-h-screen bg-stone-950 text-stone-100";
-
   const borderClass = theme === "editorial" ? "border-stone-200"
                     : theme === "creative" ? "border-stone-300/60"
                     : "border-stone-900/60";
-
   const ringBase = theme === "editorial" ? "ring-stone-200 hover:ring-stone-400"
                   : theme === "creative" ? "ring-stone-300 hover:ring-stone-400"
                   : "ring-stone-800 hover:ring-stone-600";
-
   const navText = theme === "editorial" ? "text-stone-600" : theme === "creative" ? "text-stone-700" : "text-stone-300";
   const heroMeta = theme === "editorial" ? "text-stone-500" : theme === "creative" ? "text-stone-500" : "text-stone-400";
   const heroCopy = theme === "editorial" ? "text-stone-600" : theme === "creative" ? "text-stone-700" : "text-stone-300";
   const linkMuted = theme === "editorial" ? "text-stone-700 hover:text-stone-900"
                     : theme === "creative" ? "text-stone-800 hover:text-stone-900"
                     : "text-stone-300 hover:text-white";
-
   const bgStyle = theme === "editorial"
       ? "radial-gradient(1200px 600px at 80% -20%, rgba(0,0,0,0.05), transparent 60%), radial-gradient(800px 400px at 0% 0%, rgba(0,0,0,0.03), transparent 60%)"
       : theme === "creative"
       ? "linear-gradient(180deg, #F5F1EA 0%, #ECE7DF 100%), radial-gradient(1000px 520px at 15% -10%, rgba(165,141,110,0.18), transparent 60%), radial-gradient(1100px 560px at 85% 0%, rgba(88,100,86,0.12), transparent 60%), radial-gradient(900px 500px at 50% 100%, rgba(173,156,120,0.14), transparent 60%)"
       : "radial-gradient(1200px 600px at 80% -20%, rgba(120,120,120,0.15), transparent 60%), radial-gradient(800px 400px at 0% 0%, rgba(255,255,255,0.06), transparent 60%)";
-
   const overlayClass = theme === "creative" ? "opacity-100" : "opacity-40";
 
-  // dropdown
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (!menuRef.current) return;
-      // @ts-ignore
-      if (!menuRef.current.contains(e.target)) setOpen(false);
-    }
+    function onDocClick(e: MouseEvent) { if (!menuRef.current) return; /* @ts-ignore */ if (!menuRef.current.contains(e.target)) setOpen(false); }
     if (open) document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [open]);
@@ -129,10 +102,8 @@ export default function Page() {
 
   return (
     <div className={pageClass} style={{ fontFamily: "var(--font-body)" }}>
-      {/* Background */}
       <div aria-hidden className={`fixed inset-0 -z-10 ${overlayClass}`} style={{ background: bgStyle }} />
 
-      {/* NAVBAR */}
       <header className="sticky top-0 backdrop-blur-sm z-50">
         <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
           <a href="#home" className="inline-flex items-center gap-3 group">
@@ -144,14 +115,7 @@ export default function Page() {
             <a href="#contact" className="hover:text-inherit transition">Contact</a>
           </nav>
           <div className="ml-6 relative" ref={menuRef}>
-            <button
-              type="button"
-              onClick={() => setOpen(v => !v)}
-              className={`px-3 py-1 text-xs rounded-xl ring-1 ${theme === "editorial" ? "ring-stone-300 text-stone-700 bg-stone-100" : "ring-stone-700 text-stone-300 bg-stone-900"} hover:opacity-90`}
-              aria-expanded={open}
-              aria-haspopup="menu"
-              title="Switch theme"
-            >
+            <button type="button" onClick={() => setOpen(v => !v)} className={`px-3 py-1 text-xs rounded-xl ring-1 ${theme === "editorial" ? "ring-stone-300 text-stone-700 bg-stone-100" : "ring-stone-700 text-stone-300 bg-stone-900"} hover:opacity-90`} aria-expanded={open} aria-haspopup="menu" title="Switch theme">
               {currentLabel}
             </button>
             {open && (
@@ -163,12 +127,7 @@ export default function Page() {
                   { key: "creative", label: "Creative Luxe" },
                 ].map(opt => (
                   <li key={opt.key} role="menuitem">
-                    <button
-                      type="button"
-                      onClick={() => { setMode(opt.key as any); setOpen(false); }}
-                      className={`w-full text-left px-4 py-2 text-xs hover:bg-stone-800 ${mode === opt.key ? "opacity-100" : "opacity-80"}`}
-                      aria-pressed={mode === opt.key}
-                    >
+                    <button type="button" onClick={() => { setMode(opt.key as any); setOpen(false); }} className={`w-full text-left px-4 py-2 text-xs hover:bg-stone-800 ${mode === opt.key ? "opacity-100" : "opacity-80"}`} aria-pressed={mode === opt.key}>
                       {opt.label}
                     </button>
                   </li>
@@ -179,11 +138,9 @@ export default function Page() {
         </div>
       </header>
 
-      {/* Render sections in CMS-defined order */}
       {sectionOrder.map((s, i) => (
         <div key={i}>
           {s === "hero" && (<>
-      {/* HERO */}
       <section id="home" className={`relative py-28 md:py-36 ${theme === "editorial" ? "bg-stone-50" : ""}`}>
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-10 items-end">
           <Reveal className="md:col-span-7">
@@ -191,9 +148,7 @@ export default function Page() {
             <h1 className={`mt-4 ${theme === "editorial" ? "text-5xl md:text-7xl" : "text-4xl md:text-6xl"} leading-tight font-semibold font-display`} style={{ letterSpacing: "0.02em" }}>
               {(site as any).hero?.headline ?? "Quiet luxury for bold ideas."}
             </h1>
-            <p className={`mt-6 ${heroCopy} max-w-xl`}>
-              {(site as any).hero?.copy ?? ""}
-            </p>
+            <p className={`mt-6 ${heroCopy} max-w-xl`}>{(site as any).hero?.copy ?? ""}</p>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <ExternalLink href={(site as any).ctas?.portfolio_url ?? "#"} className={`rounded-2xl px-5 py-3 text-sm font-medium ring-1 ${ringBase} transition inline-flex items-center gap-2`}>
                 <span>{(site as any).ctas?.portfolio_label ?? "View Portfolio"}</span>
@@ -226,7 +181,6 @@ export default function Page() {
       </section>
           </>)}
           {s === "services" && (<>
-      {/* SERVICES */}
       <section id="services" className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid md:grid-cols-3 gap-8">
@@ -250,7 +204,6 @@ export default function Page() {
       </section>
           </>)}
           {s === "work" && (<>
-      {/* WORK */}
       <section id="work" className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex items-end justify-between">
@@ -280,14 +233,11 @@ export default function Page() {
       </section>
           </>)}
           {s === "studio" && (<>
-      {/* ABOUT / STUDIO */}
       <section className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-3 gap-10 items-start">
           <Reveal className="md:col-span-2">
             <h2 className="text-2xl md:text-3xl font-semibold font-display" style={{ letterSpacing: "0.02em" }}>{(site as any).studio?.title ?? "Studio"}</h2>
-            <p className={`mt-4 ${heroCopy} max-w-2xl`}>
-              {(site as any).studio?.blurb ?? ""}
-            </p>
+            <p className={`mt-4 ${heroCopy} max-w-2xl`}>{(site as any).studio?.blurb ?? ""}</p>
             <div className="mt-6 flex flex-wrap gap-4 text-xs">
               {((site as any).studio?.sectors ?? []).map((s: any, i: number) => (
                 <span key={i} className="px-3 py-1 rounded-full ring-1 ring-white/10">{s}</span>
@@ -309,7 +259,6 @@ export default function Page() {
       </section>
           </>)}
           {s === "instagram" && (<>
-      {/* INSTAGRAM */}
       <section className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between">
@@ -327,7 +276,6 @@ export default function Page() {
       </section>
           </>)}
           {s === "footer" && (<>
-      {/* FOOTER */}
       <footer id="contact" className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
           <div className={`rounded-3xl ring-1 p-8 md:p-12 grid md:grid-cols-3 gap-8 items-center ${theme === "editorial" ? "ring-stone-200" : theme === "creative" ? "ring-stone-300" : "ring-white/10"}`}>

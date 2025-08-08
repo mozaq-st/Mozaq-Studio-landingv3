@@ -7,6 +7,24 @@
     <style>html,body{background:#0b0b0b;color:#eee;font:14px/1.4 system-ui,Segoe UI,Roboto,Helvetica Neue,Arial;padding:0;margin:0}</style>
   </head>
   <body>
+    <!-- Netlify Identity widget (captures invite/reset tokens) -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.3.1/dist/decap-cms.js"></script>
+
+    <!-- Auto-open login if invite/reset token in URL hash -->
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            const h = window.location.hash || '';
+            if (h.includes('invite_token') || h.includes('confirmation_token') || h.includes('recovery_token')) {
+              window.netlifyIdentity.open();
+            }
+          }
+        });
+      }
+    </script>
   </body>
 </html>
