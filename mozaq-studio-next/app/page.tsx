@@ -85,10 +85,16 @@ export default function Page() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    function onDocClick(e: MouseEvent) { if (!menuRef.current) return; /* @ts-ignore */ if (!menuRef.current.contains(e.target)) setOpen(false); }
+    function onDocClick(e: MouseEvent) {
+      if (!menuRef.current) return;
+      const t = e.target;
+      if (!(t instanceof Node)) { setOpen(false); return; } // type guard
+      if (!menuRef.current.contains(t)) setOpen(false);
+    }
     if (open) document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [open]);
+
   const currentLabel = mode === "system" ? "System (auto)" : mode === "dark" ? "Dark Luxe" : mode === "editorial" ? "Editorial Luxe" : "Creative Luxe";
 
   const hairlineGrid = theme === "editorial" ? undefined
@@ -220,7 +226,7 @@ export default function Page() {
                 <Reveal key={idx} className={`group block rounded-3xl overflow-hidden ring-1 transition ${ringBase}`}>
                   <a href={p.href || "#"}>
                     <div className={`${theme === "editorial" ? "bg-stone-200" : theme === "creative" ? "bg-stone-200" : "bg-white/10"} aspect-[4/3]`} />
-                    <div className="p-4 flex items-center justify_between text-sm">
+                    <div className="p-4 flex items-center justify-between text-sm">
                       <span className={theme === "editorial" ? "text-stone-800" : "text-stone-200"}>{p.title ?? `Project ${idx+1}`}</span>
                       <span className={theme === "editorial" ? "text-stone-400 group-hover:text-stone-700" : theme === "creative" ? "text-stone-600 group-hover:text-stone-900" : "text-stone-500 group-hover:text-stone-300"}>→</span>
                     </div>
