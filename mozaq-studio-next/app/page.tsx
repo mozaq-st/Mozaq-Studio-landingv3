@@ -33,7 +33,7 @@ function Reveal({ as: Tag = "div", className = "", children, ...props }: any) {
 
 export default function Page() {
   const MODE_KEY = "mozaq_theme_mode";
-  const [mode, setMode] = useState<"system"|"dark"|"editorial"|"creative">("system");
+  const [mode, setMode] = useState<"system"|"dark"|"editorial"|"creative">("dark");
   const mql = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
   useEffect(() => {
