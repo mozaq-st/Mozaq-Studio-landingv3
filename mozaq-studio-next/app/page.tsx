@@ -101,9 +101,17 @@ export default function Page() {
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
       if (!menuRef.current) return;
-      // @ts-ignore
-      if (!menuRef.current.contains(e.target)) setOpen(false);
+
+      const t = e.target;
+      if (!(t instanceof Node)) {
+        setOpen(false);
+        return;
+      }
+      if (!menuRef.current.contains(t)) {
+        setOpen(false);
+      }
     }
+
     if (open) document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [open]);
