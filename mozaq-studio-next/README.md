@@ -37,3 +37,7 @@ Utilities already configured. Add your components in `components/` if you split 
 ---
 
 © Mozaq Studio
+
+
+## Netlify TypeScript note
+Netlify sometimes requires explicit `@types/react` and `@types/node`. These are now included in `devDependencies`.
