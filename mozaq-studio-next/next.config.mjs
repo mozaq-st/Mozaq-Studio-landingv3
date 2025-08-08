@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  images: {
-    unoptimized: true, // play nice with Netlify static
-  },
+  images: { unoptimized: true },
 };
 
 export default nextConfig;

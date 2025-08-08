@@ -1,0 +1,79 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "site"
+    label: "Site Settings"
+    delete: false
+    files:
+      - file: "content/site.json"
+        label: "General"
+        name: "general"
+        fields:
+          - { label: "Hero Tagline", name: "hero.tagline", widget: "string" }
+          - { label: "Hero Headline", name: "hero.headline", widget: "string" }
+          - { label: "Hero Copy", name: "hero.copy", widget: "text" }
+          - label: "CTAs"
+            name: "ctas"
+            widget: "object"
+            fields:
+              - { label: "Portfolio Label", name: "portfolio_label", widget: "string" }
+              - { label: "Portfolio URL", name: "portfolio_url", widget: "string" }
+              - { label: "Start Label", name: "start_label", widget: "string" }
+              - { label: "Start URL", name: "start_url", widget: "string" }
+          - label: "Links"
+            name: "links"
+            widget: "object"
+            fields:
+              - { label: "Behance", name: "behance", widget: "string" }
+              - { label: "Instagram", name: "instagram", widget: "string" }
+              - { label: "LinkedIn", name: "linkedin", widget: "string" }
+              - { label: "Email", name: "email", widget: "string" }
+          - label: "Services"
+            name: "services"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "desc", widget: "text" }
+          - label: "Studio"
+            name: "studio"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Blurb (Markdown ok)", name: "blurb", widget: "text" }
+              - { label: "Sectors", name: "sectors", widget: "list" }
+          - label: "Instagram Label"
+            name: "instagram"
+            widget: "object"
+            fields:
+              - { label: "Link label", name: "label", widget: "string" }
+          - label: "Sections Order"
+            name: "sections"
+            widget: "list"
+            allow_add: true
+            collapsed: false
+            field: { label: "Section", name: "section", widget: "select", options: ["hero","services","work","studio","instagram","footer"] }
+
+  - name: "projects"
+    label: "Projects"
+    delete: false
+    files:
+      - file: "content/projects.json"
+        label: "Projects"
+        name: "projects"
+        fields:
+          - label: "Items"
+            name: "items"
+            widget: "list"
+            allow_add: true
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Caption", name: "caption", widget: "string", required: false }
+              - { label: "Link", name: "href", widget: "string", required: false }
+              - { label: "Image", name: "image", widget: "image", required: false }

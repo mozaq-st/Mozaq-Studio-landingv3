@@ -8,12 +8,6 @@ const news = Newsreader({ subsets: ["latin"], weight: ["600","700"], variable: "
 export const metadata: Metadata = {
   title: "Mozaq Studio — Architectural & Product Visualization",
   description: "Quiet luxury for bold ideas. Cinematic renders, precise models, and clean brand moments.",
-  openGraph: {
-    title: "Mozaq Studio — Architectural & Product Visualization",
-    description: "Cinematic renders, precise models, and clean brand moments.",
-    type: "website",
-    url: "https://www.mozaqstudio.com",
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

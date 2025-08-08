@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Project 1",
+      "caption": "A short line of context.",
+      "href": "#",
+      "image": "/uploads/placeholder-1.jpg"
+    },
+    {
+      "title": "Project 2",
+      "caption": "A short line of context.",
+      "href": "#",
+      "image": "/uploads/placeholder-2.jpg"
+    },
+    {
+      "title": "Project 3",
+      "caption": "A short line of context.",
+      "href": "#",
+      "image": "/uploads/placeholder-3.jpg"
+    },
+    {
+      "title": "Project 4",
+      "caption": "A short line of context.",
+      "href": "#",
+      "image": "/uploads/placeholder-4.jpg"
+    },
+    {
+      "title": "Project 5",
+      "caption": "A short line of context.",
+      "href": "#",
+      "image": "/uploads/placeholder-5.jpg"
+    },
+    {
+      "title": "Project 6",
+      "caption": "A short line of context.",
+      "href": "#",
+      "image": "/uploads/placeholder-6.jpg"
+    }
+  ]
+}

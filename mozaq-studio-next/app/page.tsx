@@ -2,6 +2,15 @@
 
 import { useEffect, useMemo, useState, useRef } from "react";
 
+// Content (Decap CMS-managed)
+import site from "../content/site.json";
+import projects from "../content/projects.json";
+
+type SectionKey = "hero" | "services" | "work" | "studio" | "instagram" | "footer";
+const sectionOrder: SectionKey[] = (Array.isArray((site as any).sections) 
+  ? (site as any).sections.map((s: any) => typeof s === "string" ? s : s.section).filter(Boolean) 
+  : ["hero","services","work","studio","instagram","footer"]) as SectionKey[];
+
 // Small wrapper to avoid preview env duplicate vars & unify external links
 function ExternalLink({ href, className = "", children }: { href: string; className?: string; children: React.ReactNode }) {
   return (
@@ -170,24 +179,28 @@ export default function Page() {
         </div>
       </header>
 
+      {/* Render sections in CMS-defined order */}
+      {sectionOrder.map((s, i) => (
+        <div key={i}>
+          {s === "hero" && (<>
       {/* HERO */}
       <section id="home" className={`relative py-28 md:py-36 ${theme === "editorial" ? "bg-stone-50" : ""}`}>
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-10 items-end">
           <Reveal className="md:col-span-7">
-            <p className={`text-xs uppercase tracking-[0.3em] ${heroMeta}`}>Architecture · Product · Visualization</p>
+            <p className={`text-xs uppercase tracking-[0.3em] ${heroMeta}`}>{(site as any).hero?.tagline ?? "Architecture · Product · Visualization"}</p>
             <h1 className={`mt-4 ${theme === "editorial" ? "text-5xl md:text-7xl" : "text-4xl md:text-6xl"} leading-tight font-semibold font-display`} style={{ letterSpacing: "0.02em" }}>
-              Quiet luxury for bold ideas.
+              {(site as any).hero?.headline ?? "Quiet luxury for bold ideas."}
             </h1>
             <p className={`mt-6 ${heroCopy} max-w-xl`}>
-              Cinematic renders, precise models, and clean brand moments. Built fast, with taste—so your pitch, review, or launch feels effortless.
+              {(site as any).hero?.copy ?? ""}
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ExternalLink href="https://www.behance.net/moazzan" className={`rounded-2xl px-5 py-3 text-sm font-medium ring-1 ${ringBase} transition inline-flex items-center gap-2`}>
-                <span>View Portfolio</span>
+              <ExternalLink href={(site as any).ctas?.portfolio_url ?? "#"} className={`rounded-2xl px-5 py-3 text-sm font-medium ring-1 ${ringBase} transition inline-flex items-center gap-2`}>
+                <span>{(site as any).ctas?.portfolio_label ?? "View Portfolio"}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M13.5 4.5a.75.75 0 000 1.5h5.69l-8.72 8.72a.75.75 0 101.06 1.06l8.72-8.72v5.69a.75.75 0 001.5 0V4.5a1 1 0 00-1-1h-7.25z"/><path d="M3.75 5.25A2.25 2.25 0 016 3h5.25a.75.75 0 010 1.5H6A.75.75 0 005.25 5.25v12A.75.75 0 006 18h12a.75.75 0 00.75-.75V11.25a.75.75 0 011.5 0V17.25A2.25 2.25 0 0118 19.5H6A2.25 2.25 0 013.75 17.25v-12z"/></svg>
               </ExternalLink>
-              <ExternalLink href="https://wa.me/+923191016917?text=Hi%20Mozaq%20Studio%2C%20I%27d%20like%20to%20start%20a%20project." className={`rounded-2xl px-5 py-3 text-sm font-medium ring-1 ${ringBase} transition inline-flex items-center gap-2`}>
-                <span>Start a project</span>
+              <ExternalLink href={(site as any).ctas?.start_url ?? "#"} className={`rounded-2xl px-5 py-3 text-sm font-medium ring-1 ${ringBase} transition inline-flex items-center gap-2`}>
+                <span>{(site as any).ctas?.start_label ?? "Start a project"}</span>
               </ExternalLink>
             </div>
           </Reveal>
@@ -211,7 +224,8 @@ export default function Page() {
           </Reveal>
         </div>
       </section>
-
+          </>)}
+          {s === "services" && (<>
       {/* SERVICES */}
       <section id="services" className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
@@ -221,12 +235,7 @@ export default function Page() {
               <p className={`mt-4 max-w-sm ${heroCopy}`}>Focused, senior-feel deliverables without the agency baggage.</p>
             </Reveal>
             <ul className="md:col-span-2 grid sm:grid-cols-2 gap-6">
-              {[
-                { title: "Architectural Visualization", desc: "Photoreal stills & walkthroughs in D5. Fast turnarounds for reviews, pitches, and approvals." },
-                { title: "3D Modeling", desc: "SketchUp · Rhino · Revit. Clean, organized files that others can pick up quickly." },
-                { title: "Product & Furniture Visuals", desc: "Launch-ready hero shots and clean detail renders for decks & listings." },
-                { title: "Brand & Graphic Support", desc: "Posters, case-study sheets, and polished presentation layouts that travel well." },
-              ].map((item, i) => (
+              {(site as any).services?.map((item: any, i: number) => (
                 <Reveal key={i} className={`group rounded-2xl p-6 ring-1 transition ${ringBase.replace("hover:", "")} hover:opacity-100`}>
                   <div className="flex items-start justify-between">
                     <h3 className="font-medium">{item.title}</h3>
@@ -239,7 +248,8 @@ export default function Page() {
           </div>
         </div>
       </section>
-
+          </>)}
+          {s === "work" && (<>
       {/* WORK */}
       <section id="work" className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
@@ -248,38 +258,40 @@ export default function Page() {
               <h2 className="text-2xl md:text-3xl font-semibold font-display" style={{ letterSpacing: "0.02em" }}>Selected Work</h2>
               <p className={`mt-2 text-sm ${theme === "editorial" ? "text-stone-500" : "text-stone-400"}`}>Swap these with 6–8 hero images. Each can open a case study or external link.</p>
             </div>
-            <ExternalLink href="https://www.behance.net/moazzan" className={`text-sm ${linkMuted}`}>See all on Behance →</ExternalLink>
+            <ExternalLink href={(site as any).links?.behance ?? "#"} className={`text-sm ${linkMuted}`}>{(site as any).links?.behance ? "See all on Behance →" : "See all →"}</ExternalLink>
           </div>
 
           <div className="mt-10 rounded-3xl p-1" style={hairlineGrid}>
             <div className="grid md:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map(n => (
-                <Reveal key={n} className={`group block rounded-3xl overflow-hidden ring-1 transition ${ringBase}`}>
-                  <div className={`${theme === "editorial" ? "bg-stone-200" : theme === "creative" ? "bg-stone-200" : "bg-white/10"} aspect-[4/3]`} />
-                  <div className="p-4 flex items-center justify_between text-sm">
-                    <span className={theme === "editorial" ? "text-stone-800" : "text-stone-200"}>Project {n}</span>
-                    <span className={theme === "editorial" ? "text-stone-400 group-hover:text-stone-700" : theme === "creative" ? "text-stone-600 group-hover:text-stone-900" : "text-stone-500 group-hover:text-stone-300"}>→</span>
-                  </div>
+              {(projects as any).items?.map((p: any, idx: number) => (
+                <Reveal key={idx} className={`group block rounded-3xl overflow-hidden ring-1 transition ${ringBase}`}>
+                  <a href={p.href || "#"}>
+                    <div className={`${theme === "editorial" ? "bg-stone-200" : theme === "creative" ? "bg-stone-200" : "bg-white/10"} aspect-[4/3]`} />
+                    <div className="p-4 flex items-center justify_between text-sm">
+                      <span className={theme === "editorial" ? "text-stone-800" : "text-stone-200"}>{p.title ?? `Project ${idx+1}`}</span>
+                      <span className={theme === "editorial" ? "text-stone-400 group-hover:text-stone-700" : theme === "creative" ? "text-stone-600 group-hover:text-stone-900" : "text-stone-500 group-hover:text-stone-300"}>→</span>
+                    </div>
+                  </a>
                 </Reveal>
               ))}
             </div>
           </div>
         </div>
       </section>
-
+          </>)}
+          {s === "studio" && (<>
       {/* ABOUT / STUDIO */}
       <section className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-3 gap-10 items-start">
           <Reveal className="md:col-span-2">
-            <h2 className="text-2xl md:text-3xl font-semibold font-display" style={{ letterSpacing: "0.02em" }}>Studio</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold font-display" style={{ letterSpacing: "0.02em" }}>{(site as any).studio?.title ?? "Studio"}</h2>
             <p className={`mt-4 ${heroCopy} max-w-2xl`}>
-              Independent studio crafting cinematic <strong>architecture</strong> and <strong>product</strong> visuals—fast, organized, and on-brief. I slot into your pipeline for reviews, pitches, and launches without the agency overhead.
+              {(site as any).studio?.blurb ?? ""}
             </p>
             <div className="mt-6 flex flex-wrap gap-4 text-xs">
-              <span className="px-3 py-1 rounded-full ring-1 ring-white/10">Architecture</span>
-              <span className="px-3 py-1 rounded-full ring-1 ring-white/10">Product</span>
-              <span className="px-3 py-1 rounded-full ring-1 ring-white/10">Hospitality</span>
-              <span className="px-3 py-1 rounded-full ring-1 ring-white/10">FMCG</span>
+              {((site as any).studio?.sectors ?? []).map((s: any, i: number) => (
+                <span key={i} className="px-3 py-1 rounded-full ring-1 ring-white/10">{s}</span>
+              ))}
             </div>
           </Reveal>
           <Reveal className="md:col-span-1">
@@ -295,14 +307,15 @@ export default function Page() {
           </Reveal>
         </div>
       </section>
-
+          </>)}
+          {s === "instagram" && (<>
       {/* INSTAGRAM */}
       <section className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl md:text-3xl font-semibold font-display" style={{ letterSpacing: "0.02em" }}>Instagram</h2>
-            <ExternalLink href="https://www.instagram.com/mozaq.studio/" className={`text-sm ${linkMuted}`}>
-              Follow @mozaq.studio →
+            <ExternalLink href={(site as any).links?.instagram ?? "#"} className={`text-sm ${linkMuted}`}>
+              {(site as any).instagram?.label ?? "Follow on Instagram →"}
             </ExternalLink>
           </div>
           <div className="mt-8 grid grid-cols-2 md:grid-cols-6 gap-3">
@@ -312,7 +325,8 @@ export default function Page() {
           </div>
         </div>
       </section>
-
+          </>)}
+          {s === "footer" && (<>
       {/* FOOTER */}
       <footer id="contact" className={`py-20 border-t ${borderClass}`}>
         <div className="mx-auto max-w-7xl px-6">
@@ -322,13 +336,13 @@ export default function Page() {
               <p className={`mt-2 ${heroCopy}`}>Share files, get a clear plan, receive on-time deliverables. No drama.</p>
             </div>
             <div className="flex flex-col gap-3">
-              <ExternalLink href="https://www.linkedin.com/in/moazzan" className={`rounded-2xl px-5 py-3 text-sm font-medium text-center transition ${theme === "editorial" ? "bg-stone-900 text-stone-50 hover:opacity-90" : "bg-white text-stone-900 hover:opacity-90"}`}>
+              <ExternalLink href={(site as any).links?.linkedin ?? "#"} className={`rounded-2xl px-5 py-3 text-sm font-medium text-center transition ${theme === "editorial" ? "bg-stone-900 text-stone-50 hover:opacity-90" : "bg-white text-stone-900 hover:opacity-90"}`}>
                 Contact on LinkedIn
               </ExternalLink>
-              <a href="mailto:hello@mozaqstudio.com" className={`rounded-2xl px-5 py-3 text-sm font-medium text-center transition ring-1 ${ringBase}`}>
-                Email: hello@mozaqstudio.com
+              <a href={`mailto:${(site as any).links?.email ?? "hello@mozaqstudio.com"}`} className={`rounded-2xl px-5 py-3 text-sm font-medium text-center transition ring-1 ${ringBase}`}>
+                Email: {(site as any).links?.email ?? "hello@mozaqstudio.com"}
               </a>
-              <ExternalLink href="https://wa.me/+923191016917?text=Hi%20Mozaq%20Studio%2C%20I%27d%20like%20to%20start%20a%20project." className={`rounded-2xl px-5 py-3 text-sm font-medium text-center transition ring-1 ${ringBase}`}>
+              <ExternalLink href={(site as any).ctas?.start_url ?? "#"} className={`rounded-2xl px-5 py-3 text-sm font-medium text-center transition ring-1 ${ringBase}`}>
                 WhatsApp
               </ExternalLink>
             </div>
@@ -343,6 +357,9 @@ export default function Page() {
           </div>
         </div>
       </footer>
+          </>)}
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "tagline": "Architecture \u00b7 Product \u00b7 Visualization",
+    "headline": "Quiet luxury for bold ideas.",
+    "copy": "Cinematic renders, precise models, and clean brand moments. Built fast, with taste\u2014so your pitch, review, or launch feels effortless."
+  },
+  "ctas": {
+    "portfolio_label": "View Portfolio",
+    "portfolio_url": "https://www.behance.net/moazzan",
+    "start_label": "Start a project",
+    "start_url": "https://wa.me/+923191016917?text=Hi%20Mozaq%20Studio%2C%20I%27d%20like%20to%20start%20a%20project."
+  },
+  "links": {
+    "behance": "https://www.behance.net/moazzan",
+    "instagram": "https://www.instagram.com/mozaq.studio/",
+    "linkedin": "https://www.linkedin.com/in/moazzan",
+    "email": "hello@mozaqstudio.com"
+  },
+  "services": [
+    {
+      "title": "Architectural Visualization",
+      "desc": "Photoreal stills & walkthroughs in D5. Fast turnarounds for reviews, pitches, and approvals."
+    },
+    {
+      "title": "3D Modeling",
+      "desc": "SketchUp \u00b7 Rhino \u00b7 Revit. Clean, organized files that others can pick up quickly."
+    },
+    {
+      "title": "Product & Furniture Visuals",
+      "desc": "Launch-ready hero shots and clean detail renders for decks & listings."
+    },
+    {
+      "title": "Brand & Graphic Support",
+      "desc": "Posters, case-study sheets, and polished presentation layouts that travel well."
+    }
+  ],
+  "studio": {
+    "title": "Studio",
+    "blurb": "Independent studio crafting cinematic **architecture** and **product** visuals\u2014fast, organized, and on-brief. I slot into your pipeline for reviews, pitches, and launches without the agency overhead.",
+    "sectors": [
+      "Architecture",
+      "Product",
+      "Hospitality",
+      "FMCG"
+    ]
+  },
+  "instagram": {
+    "label": "Follow @mozaq.studio \u2192"
+  },
+  "sections": [
+    "hero",
+    "services",
+    "work",
+    "studio",
+    "instagram",
+    "footer"
+  ]
+}
